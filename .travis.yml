@@ -8,5 +8,6 @@ script:
   - pytest --cov=src tests
 after_success:
   - codecov                        # Upload report to codecov.io
-- name: Codecov
-  uses: codecov/codecov-action@v3.1.1
+
+  - name: Codecov
+    uses: codecov/codecov-action@v3.1.1
