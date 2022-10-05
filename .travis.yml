@@ -5,4 +5,6 @@ install:
   - pip install -e . 
   - pip install pytest-cov codecov # Install packages for code coverage report
 script:
-  - pytest tests
+  - pytest --cov=src tests
+after_success:
+  - codecov                        # Upload report to codecov.io
