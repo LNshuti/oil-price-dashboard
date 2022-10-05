@@ -2,3 +2,4 @@
 
 
 # Oil Prices Dashboard
+This repository uses software engineering best practices to build a dashboard that tracks live global oil prices. The goal of building this project is to familiarize myself with unit testing, continuous integration/delivery, and building full stack applications with a special focus on python. 
