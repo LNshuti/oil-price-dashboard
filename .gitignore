@@ -40,3 +40,10 @@ vignettes/*.pdf
 
 # Codecov 
 *.codecov
+tests/visualization/__pycache__/test_plots.cpython-38-pytest-7.1.3.pyc
+codecov.exe.SHA256SUM.sig
+codecov.exe
+codecov.asc
+codecov.exe.SHA256SUM
+__pycache__/test_environment.cpython-38-pytest-7.1.3.pyc
+tests/visualization/__pycache__/__init__.cpython-38.pyc
