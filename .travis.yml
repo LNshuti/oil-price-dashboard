@@ -3,5 +3,6 @@ python:
   - "3.8"
 install:
   - pip install -e . 
+  - pip install pytest-cov codecov # Install packages for code coverage report
 script:
   - pytest tests
