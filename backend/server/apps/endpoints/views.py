@@ -5,7 +5,8 @@ from numpy.random import rand
 from rest_framework import views, status
 from rest_framework.response import Response
 from apps.ml.registry import MLRegistry
-from server.wsgi import registry
+import apps.ml.registry as registry
+# from server.wsgi import registry
 
 # Create your views here.
 from rest_framework import viewsets
