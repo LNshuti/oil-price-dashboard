@@ -38,6 +38,7 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 .env
+C:\Users\Leonce Nshuti\Desktop\portfolio\oil-price-dashboard\.env
 
 # Codecov 
 *.codecov
