@@ -2,10 +2,6 @@ import lineapy
 import pandas as pd 
 import requests
 import re 
-import lineapy
-
-
-
 
 def download_and_tidy_oil_prices(url):
     
