@@ -2,6 +2,12 @@
 -e .
 
 # external requirements
+boto3==1.24.22 
+Collectfast==2.2.0
+Django==4.0.6 
+django-environ==0.9.0
+psycopg2-binary==2.9.3
+Werkzeug==2.2.2
 click
 Sphinx
 coverage
