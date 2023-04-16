@@ -22,7 +22,10 @@ from numpy.linalg import svd
 import altair as alt
 ```
 
-
+```{python}
+%load_ext lineapy 
+%load_ext nb_black
+```
 
 # References 
 1. I used https://www.deploymachinelearning.com/ to learn about django and ML model deployment 
