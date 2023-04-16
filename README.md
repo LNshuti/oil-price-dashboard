@@ -49,6 +49,15 @@ df = pd.read_excel(
 lineapy.save(df, "weekly_gas_price_data")
 ```
 
+```{r}
+chart = alt.vconcat()
+for i, plot in enumerate(plots):
+    if i % 4 == 0:
+        row = alt.hconcat()
+        chart &= row
+    row |= plot
+chart
+```
 ![visualization](https://user-images.githubusercontent.com/13305262/232337311-7086b21e-8929-4324-9818-c0bd792b8a62.png)
 
 
