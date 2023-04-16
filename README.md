@@ -49,5 +49,10 @@ df = pd.read_excel(
 lineapy.save(df, "weekly_gas_price_data")
 ```
 
+![visualization](https://user-images.githubusercontent.com/13305262/232337311-7086b21e-8929-4324-9818-c0bd792b8a62.png)
+
+
+
 # References 
 1. I used https://www.deploymachinelearning.com/ to learn about django and ML model deployment 
+2. Sean Taylor. Lineapy
