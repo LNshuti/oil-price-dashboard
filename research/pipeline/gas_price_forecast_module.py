@@ -108,7 +108,7 @@ def get_gas_price_forecast(cutoff_date, df_long, region):
 
 def run_session_including_weekly_gas_price_data(
     region="U.S.",
-    cutoff_date="2022-10-02",
+    cutoff_date="2023-04-16",
 ):
     # Given multiple artifacts, we need to save each right after
     # its calculation to protect from any irrelevant downstream
@@ -127,7 +127,7 @@ def run_session_including_weekly_gas_price_data(
 
 def run_all_sessions(
     region="U.S.",
-    cutoff_date="2022-10-02",
+    cutoff_date="2023-04-16",
 ):
     artifacts = dict()
     artifacts.update(run_session_including_weekly_gas_price_data(region, cutoff_date))
@@ -138,7 +138,7 @@ if __name__ == "__main__":
     # Edit this section to customize the behavior of artifacts
     parser = argparse.ArgumentParser()
     parser.add_argument("--region", type=str, default="U.S.")
-    parser.add_argument("--cutoff_date", type=str, default="2022-10-02")
+    parser.add_argument("--cutoff_date", type=str, default="2023-04-16")
     args = parser.parse_args()
     artifacts = run_all_sessions(
         region=args.region,

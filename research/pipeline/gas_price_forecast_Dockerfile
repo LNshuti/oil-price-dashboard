@@ -1,4 +1,4 @@
-FROM apache/airflow:latest-python3.8
+FROM apache/airflow:latest-python3.9
 
 RUN mkdir /tmp/installers
 WORKDIR /tmp/installers
@@ -9,7 +9,8 @@ COPY ./gas_price_forecast_requirements.txt ./
 RUN pip install -r ./gas_price_forecast_requirements.txt
 
 WORKDIR /opt/airflow/dags
-COPY . .
+COPY ./gas_price_forecast_module.py ./
+COPY ./gas_price_forecast_dag.py ./
 
 WORKDIR /opt/airflow
 
