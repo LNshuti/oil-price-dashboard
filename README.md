@@ -50,6 +50,15 @@ lineapy.save(df, "weekly_gas_price_data")
 ```
 
 ```{r}
+plots = []
+for region in all_regions:
+    result = forecast_region(
+        region=region, cutoff_date=cutoff_date, height=200, width=200
+    )
+    plots.append(result["gas_price_forecast"])
+```
+
+```{r}
 chart = alt.vconcat()
 for i, plot in enumerate(plots):
     if i % 4 == 0:
