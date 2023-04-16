@@ -27,6 +27,34 @@ import altair as alt
 %load_ext nb_black
 ```
 
+```{r}
+uncertainty_plot = (
+    forecast.pipe(alt.Chart, height=height, width=width)
+    .encode(
+        x="week",
+        y=alt.Y(f"lo-{CI}", title="Price"),
+        y2=alt.Y2(f"hi-{CI}", title="Price"),
+    )
+    .mark_area(opacity=0.2)
+)
+
+history_plot = (
+    region_df.query(f"week >= '{plot_start_date}'")
+    .pipe(alt.Chart, title=plot_title)
+    .encode(x=alt.X("week", title="Week"), y=alt.Y("price", title="Price"))
+    .mark_line()
+)
+
+forecast_plot = forecast.pipe(alt.Chart).encode(x="week", y="mean").mark_line()
+
+cutoff_plot = (
+    train.tail(1).pipe(alt.Chart).encode(x="week").mark_rule(strokeDash=[10, 2])
+)
+
+full_plot = uncertainty_plot + history_plot + forecast_plot + cutoff_plot
+lineapy.save(full_plot, "gas_price_forecast")
+
+```
 
 ```{python}
 response = requests.get("https://www.eia.gov/petroleum/gasdiesel/xls/pswrgvwall.xls")
@@ -48,6 +76,26 @@ df = pd.read_excel(
 )
 lineapy.save(df, "weekly_gas_price_data")
 ```
+
+```{r}
+raw_forecast = m_aa.predict(h=H, level=(CI,))
+raw_forecast_exp = {key: np.exp(value) for key, value in raw_forecast.items()}
+forecast = pd.DataFrame(raw_forecast_exp).assign(
+    week=pd.date_range(train["week"].max(), periods=H, freq="W")
+    + pd.Timedelta("7 days")
+)
+forecast = pd.concat(
+    [
+        forecast,
+        train.tail(1)
+        .rename(columns={"price": "mean"})
+        .assign(**{f"lo-{CI}": lambda x: x["mean"], f"hi-{CI}": lambda x: x["mean"]}),
+    ]
+)
+forecast.head()
+
+```
+
 
 ```{r}
 plots = []
