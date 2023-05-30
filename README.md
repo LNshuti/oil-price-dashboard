@@ -1,8 +1,7 @@
 [![Build Status](https://app.travis-ci.com/LNshuti/oil-price-dashboard.svg?branch=main)](https://app.travis-ci.com/LNshuti/oil-price-dashboard)
 
-
 # Oil Prices Dashboard
-This repository uses software engineering best practices to build a dashboard that tracks live global oil prices. The goal of building this project is to familiarize myself with unit testing, continuous integration/delivery, and building a full stack application with python. 
+This repository attempts to reproduce Sean Taylor's tutorial on LineAPy. As an enchancement, I built a dashboard that tracks live global oil prices based on Sean's tutorial. The goal of building this project is to familiarize myself with unit testing, continuous integration/delivery, and building a full stack application with python. 
 
 
 # Tools used
