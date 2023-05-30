@@ -121,4 +121,4 @@ chart
 
 # References 
 1. I used https://www.deploymachinelearning.com/ to learn about django and ML model deployment 
-2. Sean Taylor. Lineapy
+2. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
