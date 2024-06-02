@@ -2,6 +2,8 @@
 .Rhistory
 .Rapp.history
 
+research/__pycache__/*
+research/deploy_llama3-8b_modal.py
 # Session Data files
 .RData
 
