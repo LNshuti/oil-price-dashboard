@@ -1,0 +1,5 @@
+data/raw/* filter=lfs diff=lfs merge=lfs -text
+data/raw/AEO2023/AEO2023.txt filter=lfs diff=lfs merge=lfs -text
+data/raw/INTL/INTL.txt filter=lfs diff=lfs merge=lfs -text
+data/raw/PET/PET.txt filter=lfs diff=lfs merge=lfs -text
+data/raw/ELEC/ELEC.txt filter=lfs diff=lfs merge=lfs -text
