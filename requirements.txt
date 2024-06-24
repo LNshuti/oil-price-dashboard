@@ -5,3 +5,7 @@ pandas
 seaborn
 statsmodels
 scikit-learn
+fastapi
+uvicorn
+plotly  
+xgboost
