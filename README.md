@@ -8,7 +8,7 @@ The Oil Price Dashboard Project is designed to understand the US oil markets by 
 
 ## Features
 
-- **Data Analysis**: Jupyter [Notebook]('explore_oil_markets.ipynb') contains detailed steps for data cleaning, transformation, and preliminary analysis. 
+- **Data Analysis**: Jupyter [Notebook]("https://github.com/LNshuti/oil-price-dashboard/blob/main/'explore_oil_markets.ipynb'") contains detailed steps for data cleaning, transformation, and preliminary analysis. 
 
 - **Interactive Dashboard**: Integrates the analysis and visualizations into an interactive dashboard using FastAPI.
 
