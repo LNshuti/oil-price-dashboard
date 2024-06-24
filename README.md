@@ -35,6 +35,10 @@ jupyter notebook
 ```
 Navigate to the explore_oil_markets.ipynb notebook and run the cells to perform the analysis and view the visualizations.
 
+### Run the interactive Dashboard
+```bash
+uvicorn main:app --reload
+```
 
 # References 
 1. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
