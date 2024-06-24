@@ -13,11 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
-    - name: Set up Python 3.10
-      uses: actions/setup-python@v4
-      with:
-        python-version: "3.10"
-    
     - name: Set up Conda
       uses: conda-incubator/setup-miniconda@v2
       with:
@@ -25,8 +20,7 @@ jobs:
         environment-file: environment.yaml
         auto-activate-base: false
     
-    - name: Install dependencies
-      shell: bash -l {0}
+    - name: Install additional dependencies
       run: |
         conda activate oil-prices
         python -m pip install --upgrade pip
@@ -34,7 +28,6 @@ jobs:
         pip install pytest-cov codecov
     
     - name: Run tests with pytest
-      shell: bash -l {0}
       run: |
         conda activate oil-prices
         pytest --cov=src tests
