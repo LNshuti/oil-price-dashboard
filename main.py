@@ -6,25 +6,39 @@ from sklearn.ensemble import RandomForestRegressor
 from xgboost import XGBRegressor
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
+import matplotlib.pyplot as plt
 
 app = FastAPI()
 
 # Load the dataset
 file_path = 'data/processed/louisiana_tot_gasoline_wholesale_monthly.csv'
 data = pd.read_csv(file_path)
-data['Date'] = pd.to_datetime(data['Date'])
-data.set_index('Date', inplace=True)
+# Convert the 'date' column to datetime format and fix the date parsing issue
+data['date'] = pd.to_datetime(data['date'] + '01', format='%Y%m%d')
+
+# Set the date column as index
+data.set_index('date', inplace=True)
+data = data[['value']]  # Keep only the necessary 'value' column
+
+# Plot the time series
+plt.figure(figsize=(12, 6))
+plt.plot(data.index, data['value'], label='Gasoline Wholesale Price')
+plt.title('Louisiana Total Gasoline Wholesale Monthly Prices')
+plt.xlabel('Date')
+plt.ylabel('Price')
+plt.legend()
+plt.show()
 
 # Feature engineering
 for lag in range(1, 13):
-    data[f'lag_{lag}'] = data['Value'].shift(lag)
-data['rolling_mean_3'] = data['Value'].rolling(window=3).mean()
-data['rolling_std_3'] = data['Value'].rolling(window=3).std()
+    data[f'lag_{lag}'] = data['value'].shift(lag)
+data['rolling_mean_3'] = data['value'].rolling(window=3).mean()
+data['rolling_std_3'] = data['value'].rolling(window=3).std()
 data.dropna(inplace=True)
 
 # Define features and target
-X = data.drop('Value', axis=1)
-y = data['Value']
+X = data.drop('value', axis=1)
+y = data['value']
 
 # Split the data into training and testing sets
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, shuffle=False, random_state=42)
