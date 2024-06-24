@@ -39,6 +39,7 @@ Navigate to the explore_oil_markets.ipynb notebook and run the cells to perform 
 ```bash
 uvicorn main:app --reload
 ```
+#### Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to interact with the app
 
 # References 
 1. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
