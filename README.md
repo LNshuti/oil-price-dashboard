@@ -1,13 +1,40 @@
 [![Build Status](https://app.travis-ci.com/LNshuti/oil-price-dashboard.svg?branch=main)](https://app.travis-ci.com/LNshuti/oil-price-dashboard)
 
-# Oil Prices Dashboard
-This repository attempts to reproduce Sean Taylor's tutorial on LineAPy(2). As an enchancement, I built a dashboard that tracks live global oil prices based on Sean's tutorial. The goal of building this project is to familiarize myself with unit testing, continuous integration/delivery, and building a full stack application with python. 
+# Oil Price Dashboard Project
 
+## Overview
 
-# Tools used
+The Oil Price Dashboard Project is designed to undersand the US oil markets by forecasting prices and production quantities through an interactive dashboard. This project utilizes data from various sources, focusing on the wholesale gasoline prices in different regions. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, and visualization steps to understand the trends and patterns in oil prices over time.
 
-## Python 
+## Features
+
+- **Data Analysis**: Jupyter Notebook contains detailed steps for data cleaning, transformation, and preliminary analysis. It explores various aspects of the oil price data, such as trends over time, comparisons between different regions, and more.
+
+- **Interactive Dashboard**: Integrates the analysis and visualizations into an interactive dashboard using FastAPI.
+
+## Setup
+
+### Create a separate environment to isolate requirements
+```bash
+conda env create -f environment.yaml
+```
+
+### Install requirements
+
+```bash
+pip install -r requirements.txt
+```
+
+### Activate the environment
+```bash
+conda activate oil-prices
+```
+### Run the notebook for Exploratory data analysis
+```bash
+jupyter notebook
+```
+Navigate to the explore_oil_markets.ipynb notebook and run the cells to perform the analysis and view the visualizations.
+
 
 # References 
-1. I used https://www.deploymachinelearning.com/ to learn about django and ML model deployment 
-2. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
+1. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
