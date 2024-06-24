@@ -4,11 +4,11 @@
 
 ## Overview
 
-The Oil Price Dashboard Project is designed to undersand the US oil markets by forecasting prices and production quantities through an interactive dashboard. This project utilizes data from various sources, focusing on the wholesale gasoline prices in different regions. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, and visualization steps to understand the trends and patterns in oil prices over time.
+The Oil Price Dashboard Project is designed to understand the US oil markets by forecasting prices and production quantities. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, forecasting and visualization.
 
 ## Features
 
-- **Data Analysis**: Jupyter Notebook contains detailed steps for data cleaning, transformation, and preliminary analysis. It explores various aspects of the oil price data, such as trends over time, comparisons between different regions, and more.
+- **Data Analysis**: Jupyter [Notebook]() contains detailed steps for data cleaning, transformation, and preliminary analysis. 
 
 - **Interactive Dashboard**: Integrates the analysis and visualizations into an interactive dashboard using FastAPI.
 
