@@ -1,0 +1,97 @@
+﻿US oil markets forecasting of prices quantities
+
+
+Full-stack application to analyze and predict energy production, providing actionable insights to optimize energy use. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices. 
+
+
+Tech Stack
+
+
+Backend 
+
+
+1. API Design: FastAPI
+2. Database: PostgreSQL
+3. Caching: Redis
+4. Machine Learning Models
+5. Data Pipeline: ETL with AWS Glue
+6. Deployment: Docker and Kubernetes
+
+
+ Frontend 
+
+
+1. Framework: React.js
+2. State Management: Redux
+3. UI Components Material-UI
+4. Data Visualization Chart.js
+
+
+________________
+
+
+
+
+Implementation
+
+
+Backend
+
+
+1. API Endpoints
+   `/data/upload` Endpoint for uploading energy production data.
+   `/data/analyze` Endpoint for triggering data analysis and returning results.
+   `/predict` Endpoint for predicting future energy production based on historical data.
+
+
+2. Data Storage
+Design the database schema to store energy data, user information, and analysis results.
+Implement Redis caching for storing frequently accessed data such as recent analysis results.
+
+
+3. Machine Learning Integration
+Train models using historical energy production and cost data.
+Implement endpoints to serve predictions using pre-trained models.
+Use FastAPI’s dependency injection system to manage model loading and inference efficiently.
+
+
+4. Data Pipeline
+AWS Glue to automate data ingestion from various sources and preprocess the data for analysis and model training.
+
+
+ Frontend
+
+
+1. User Interface
+Design a dashboard with Material-UI to display key metrics such as current energy production, historical trends, and future predictions.
+Implement forms for users to configure analysis parameters.
+
+
+2. Data Visualization
+Chart.js to create interactive charts that allow users to explore data trends over time, compare different periods, and identify patterns.
+
+
+3. State Management
+Redux to manage the application state, ensuring smooth interactions and data flow between components.
+
+
+4. User Interaction
+   Implement authentication and authorization features to secure the application.
+   Provide real-time updates and notifications using WebSockets.
+
+
+ Deployment
+
+
+1. Containerization
+   Create Dockerfiles for the backend and frontend applications.
+   Use Docker Compose to manage multi-container applications during development.
+
+
+2. Orchestration
+1.  Kubernetes for production deployment to manage container scaling, load balancing, and service discovery.
+2.  Use AWS EKS (Elastic Kubernetes Service) to deploy and manage the Kubernetes cluster.
+
+
+3. Continuous Integration/Continuous Deployment (CI/CD)
+CI/CD pipeline using GitHub Actions to automate testing, building, and deployment of the application.
