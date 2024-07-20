@@ -9,40 +9,40 @@ The Oil Price Dashboard Project is designed to understand the US oil markets by 
 ```mermaid
 graph TD;
     subgraph Frontend
-        react[React.js + Redux] --> materialui[Material-UI]
-        materialui --> chartjs[Chart.js]
-        react --> s3frontend[AWS S3 (Static Hosting)]
+        react["React.js + Redux"] --> materialui["Material-UI"]
+        materialui --> chartjs["Chart.js"]
+        react --> s3frontend["AWS S3 (Static Hosting)"]
     end
 
     subgraph Backend
-        fastapi[FastAPI] --> redis[Redis (Caching)]
-        fastapi --> rds[RDS PostgreSQL (Database)]
-        fastapi --> s3data[AWS S3 (Data Storage)]
-        fastapi --> glue[AWS Glue (ETL)]
-        fastapi --> dynamodb[DynamoDB (User Feedback)]
-        glue --> ml[Machine Learning Processing]
+        fastapi["FastAPI"] --> redis["Redis (Caching)"]
+        fastapi --> rds["RDS PostgreSQL (Database)"]
+        fastapi --> s3data["AWS S3 (Data Storage)"]
+        fastapi --> glue["AWS Glue (ETL)"]
+        fastapi --> dynamodb["DynamoDB (User Feedback)"]
+        glue --> ml["Machine Learning Processing"]
         ml --> fastapi
     end
 
     subgraph Machine_Learning
-        sklearn[Scikit-learn] --> tensorflow[TensorFlow]
-        sklearn --> pytorch[PyTorch]
-        tensorflow --> training[Model Training]
+        sklearn["Scikit-learn"] --> tensorflow["TensorFlow"]
+        sklearn --> pytorch["PyTorch"]
+        tensorflow --> training["Model Training"]
         pytorch --> training
-        training --> infer[Inference Models]
+        training --> infer["Inference Models"]
         infer --> fastapi
     end
 
     subgraph Deployment
-        docker[Docker] --> kubernetes[Kubernetes (AWS EKS)]
-        kubernetes --> elasticbeanstalk[AWS Elastic Beanstalk]
+        docker["Docker"] --> kubernetes["Kubernetes (AWS EKS)"]
+        kubernetes --> elasticbeanstalk["AWS Elastic Beanstalk"]
         elasticbeanstalk --> fastapi
     end
 
     subgraph CI_CD
-        github[GitHub Actions] --> docker
-        docker --> ci[CI/CD Pipeline]
-        ci --> deployment[Deployment Process]
+        github["GitHub Actions"] --> docker
+        docker --> ci["CI/CD Pipeline"]
+        ci --> deployment["Deployment Process"]
         deployment --> kubernetes
     end
 
