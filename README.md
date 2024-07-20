@@ -25,10 +25,8 @@ graph TD;
     end
 
     subgraph Machine_Learning
-        sklearn["Scikit-learn"] --> tensorflow["TensorFlow"]
         sklearn --> pytorch["PyTorch"]
         tensorflow --> training["Model Training"]
-        pytorch --> training
         training --> infer["Inference Models"]
         infer --> fastapi
     end
