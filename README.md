@@ -7,6 +7,10 @@
 The Oil Price Dashboard Project is designed to understand the US oil markets by forecasting prices and production quantities. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, forecasting and visualization.
 
 ```mermaid
+%% Define classes for styling
+classDef defaultStyle fill:#fff,stroke:#333,stroke-width:2px,font-size:16px;
+classDef importantStyle fill:#f9f9f9,stroke:#333,stroke-width:3px,font-size:18px,color:red;
+
 graph TD;
     subgraph Frontend
         react["React.js + Redux"] --> materialui["Material-UI"]
