@@ -37,7 +37,7 @@ graph TD;
         deployment --> kubernetes
     end
 
-    style react fill:#f9f,stroke:#333,stroke-width:2px
+    style react fill:#f12f,stroke:#333,stroke-width:2px
     style fastapi fill:#bbf,stroke:#333,stroke-width:2px
     style sklearn fill:#fbb,stroke:#333,stroke-width:2px
     style docker fill:#ddf,stroke:#333,stroke-width:2px
