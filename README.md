@@ -24,13 +24,6 @@ graph TD;
         ml --> fastapi
     end
 
-    subgraph Machine_Learning
-        sklearn --> pytorch["PyTorch"]
-        tensorflow --> training["Model Training"]
-        training --> infer["Inference Models"]
-        infer --> fastapi
-    end
-
     subgraph Deployment
         docker["Docker"] --> kubernetes["Kubernetes (AWS EKS)"]
         kubernetes --> elasticbeanstalk["AWS Elastic Beanstalk"]
