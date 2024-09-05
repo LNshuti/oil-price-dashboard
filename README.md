@@ -6,44 +6,6 @@
 
 The Oil Price Dashboard Project is designed to understand the US oil markets by forecasting prices and production quantities. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, forecasting and visualization.
 
-```mermaid
-
-graph TD;
-    subgraph Frontend
-        react["React.js + Redux"] --> materialui["Material-UI"]
-        materialui --> chartjs["Chart.js"]
-        react --> s3frontend["AWS S3 (Static Hosting)"]
-    end
-
-    subgraph Backend
-        fastapi["FastAPI"] --> redis["Redis (Caching)"]
-        fastapi --> rds["RDS PostgreSQL (Database)"]
-        fastapi --> s3data["AWS S3 (Data Storage)"]
-        fastapi --> glue["AWS Glue (ETL)"]
-        fastapi --> dynamodb["DynamoDB (User Feedback)"]
-        glue --> ml["Machine Learning Processing"]
-        ml --> fastapi
-    end
-
-    subgraph Deployment
-        docker["Docker"] --> kubernetes["Kubernetes (AWS EKS)"]
-        kubernetes --> elasticbeanstalk["AWS Elastic Beanstalk"]
-        elasticbeanstalk --> fastapi
-    end
-
-    subgraph CI_CD
-        github["GitHub Actions"] --> docker
-        docker --> ci["CI/CD Pipeline"]
-        ci --> deployment["Deployment Process"]
-        deployment --> kubernetes
-    end
-
-    style react fill:#f12f,stroke:#333,stroke-width:3px
-    style fastapi fill:#bbf,stroke:#333,stroke-width:3px
-    style sklearn fill:#fbb,stroke:#333,stroke-width:3px
-    style docker fill:#ddf,stroke:#333,stroke-width:3px
-```
-
 ## Features
 
 - **Data Analysis**: Jupyter [Notebook]("https://github.com/LNshuti/oil-price-dashboard/blob/main/'explore_oil_markets.ipynb'") contains detailed steps for data cleaning, transformation, and preliminary analysis. 
