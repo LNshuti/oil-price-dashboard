@@ -85,3 +85,13 @@ def test_format_nejm_table_returns_styled_html():
 
     assert isinstance(html, str)
     assert '<table' in html or '<style' in html
+
+
+def test_gradio_app_builds():
+    """Test that the Gradio app can be instantiated."""
+    from app import create_app
+    import gradio as gr
+
+    app = create_app()
+
+    assert isinstance(app, gr.Blocks)

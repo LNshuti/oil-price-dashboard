@@ -9,8 +9,10 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import requests
 from io import BytesIO
+import base64
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
+import gradio as gr
 
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA, AutoETS
@@ -505,3 +507,174 @@ def create_forecast_table(forecasts_df: pd.DataFrame) -> str:
     display_df = display_df[available_cols]
 
     return format_nejm_table(display_df, caption="Forecasted Values by Model")
+
+
+def fig_to_base64(fig: plt.Figure) -> str:
+    """Convert matplotlib figure to base64 for display."""
+    buf = BytesIO()
+    fig.savefig(buf, format='png', dpi=150, bbox_inches='tight', facecolor='white')
+    buf.seek(0)
+    plt.close(fig)
+    return base64.b64encode(buf.read()).decode('utf-8')
+
+
+def run_dashboard(horizon: int, refresh_data: bool) -> tuple:
+    """
+    Main dashboard callback function.
+
+    Args:
+        horizon: Forecast horizon in periods.
+        refresh_data: Whether to force data refresh.
+
+    Returns:
+        Tuple of (forecast_plot, metrics_html, forecast_table_html, comparison_plot)
+    """
+    # Load data
+    df = load_oil_data(force_refresh=refresh_data)
+
+    # Run forecasts
+    results = run_forecasts(df, horizon=horizon)
+
+    # Create visualizations
+    forecast_fig = create_tufte_forecast_plot(df, results['forecasts'])
+    comparison_fig = create_model_comparison_plot(results['metrics'])
+
+    # Create tables
+    metrics_html = format_nejm_table(results['metrics'], caption="Model Performance Metrics")
+    forecast_html = create_forecast_table(results['forecasts'])
+
+    return forecast_fig, metrics_html, forecast_html, comparison_fig
+
+
+def create_app() -> gr.Blocks:
+    """Create the Gradio application."""
+
+    # Custom CSS for the app
+    custom_css = """
+    .gradio-container {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    .app-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    .app-subtitle {
+        font-size: 14px;
+        color: #666;
+        margin-bottom: 20px;
+    }
+    """
+
+    with gr.Blocks(css=custom_css, title="Oil Price Forecast Dashboard") as app:
+
+        # Header
+        gr.HTML("""
+            <div class="app-title">Oil Price Forecasting Dashboard</div>
+            <div class="app-subtitle">
+                State-of-the-art forecasting with AutoARIMA, AutoETS, LightGBM, and XGBoost
+            </div>
+        """)
+
+        # Controls
+        with gr.Row():
+            horizon_dropdown = gr.Dropdown(
+                choices=[4, 8, 12, 26, 52],
+                value=12,
+                label="Forecast Horizon (periods)",
+            )
+            refresh_checkbox = gr.Checkbox(
+                label="Refresh Data",
+                value=False,
+            )
+            run_button = gr.Button("Run Forecast", variant="primary")
+
+        # Tabs
+        with gr.Tabs():
+            with gr.TabItem("Forecast"):
+                forecast_plot = gr.Plot(label="Price Forecast")
+                forecast_table = gr.HTML(label="Forecast Values")
+
+            with gr.TabItem("Model Comparison"):
+                comparison_plot = gr.Plot(label="Model Metrics Comparison")
+                metrics_table = gr.HTML(label="Performance Metrics")
+
+            with gr.TabItem("Data Explorer"):
+                data_preview = gr.DataFrame(
+                    label="Historical Data",
+                    interactive=False,
+                )
+                download_btn = gr.Button("Download CSV")
+                download_file = gr.File(label="Download", visible=False)
+
+            with gr.TabItem("About"):
+                gr.Markdown("""
+                ## Methodology
+
+                This dashboard uses state-of-the-art time series forecasting methods:
+
+                **Statistical Models (StatsForecast):**
+                - **AutoARIMA**: Automatic ARIMA model selection with seasonal components
+                - **AutoETS**: Automatic exponential smoothing state space model
+
+                **Machine Learning Models (MLForecast):**
+                - **LightGBM**: Gradient boosting with lag features and rolling statistics
+                - **XGBoost**: Alternative gradient boosting implementation
+
+                ## Data Source
+
+                U.S. Energy Information Administration (EIA) - Weekly Petroleum Status Report
+
+                ## Confidence Intervals
+
+                Statistical models provide 80% and 95% prediction intervals.
+
+                ---
+
+                *Built with Gradio, Nixtla, and Matplotlib*
+                """)
+
+        # Event handlers
+        def on_run_forecast(horizon, refresh):
+            forecast_fig, metrics_html, forecast_html, comparison_fig = run_dashboard(
+                horizon=int(horizon),
+                refresh_data=refresh
+            )
+            return forecast_fig, metrics_html, forecast_html, comparison_fig
+
+        def load_data_preview():
+            df = load_oil_data()
+            preview = df.tail(50).reset_index()
+            preview.columns = ['Date', 'Price']
+            return preview
+
+        def download_data():
+            df = load_oil_data()
+            csv_path = "/tmp/oil_prices_export.csv"
+            df.to_csv(csv_path)
+            return csv_path
+
+        run_button.click(
+            fn=on_run_forecast,
+            inputs=[horizon_dropdown, refresh_checkbox],
+            outputs=[forecast_plot, metrics_table, forecast_table, comparison_plot]
+        )
+
+        app.load(
+            fn=load_data_preview,
+            outputs=[data_preview]
+        )
+
+        download_btn.click(
+            fn=download_data,
+            outputs=[download_file]
+        )
+
+    return app
+
+
+# Main entry point
+if __name__ == "__main__":
+    app = create_app()
+    app.launch()
