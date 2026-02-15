@@ -1,3 +1,15 @@
+---
+title: Oil Price Dashboard
+emoji: 📈
+colorFrom: blue
+colorTo: green
+sdk: gradio
+sdk_version: 5.14.0
+app_file: app.py
+pinned: false
+license: mit
+---
+
 [![CI](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml)
 [![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/LNshuti/oil-price-dashboard)
 
