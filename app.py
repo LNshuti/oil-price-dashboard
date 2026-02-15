@@ -386,3 +386,122 @@ def create_model_comparison_plot(metrics_df: pd.DataFrame) -> plt.Figure:
 
     plt.tight_layout()
     return fig
+
+
+NEJM_CSS = """
+<style>
+.nejm-table {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+    font-size: 14px;
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+.nejm-table thead {
+    border-top: 2px solid #333;
+    border-bottom: 1px solid #333;
+}
+
+.nejm-table th {
+    text-align: left;
+    padding: 12px 16px;
+    font-weight: 600;
+    color: #333;
+}
+
+.nejm-table th.numeric {
+    text-align: right;
+}
+
+.nejm-table tbody tr {
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.nejm-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+.nejm-table tbody tr:last-child {
+    border-bottom: 2px solid #333;
+}
+
+.nejm-table td {
+    padding: 10px 16px;
+    color: #444;
+}
+
+.nejm-table td.numeric {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+.nejm-table td.model-name {
+    font-weight: 500;
+}
+</style>
+"""
+
+
+def format_nejm_table(df: pd.DataFrame, caption: str = None) -> str:
+    """
+    Format a DataFrame as an NEJM-styled HTML table.
+
+    NEJM style:
+    - Horizontal rules only (top, header-bottom, table-bottom)
+    - No vertical lines
+    - Right-aligned numbers, left-aligned text
+    - Subtle alternating row shading
+
+    Args:
+        df: DataFrame to format.
+        caption: Optional table caption.
+
+    Returns:
+        HTML string with embedded CSS.
+    """
+    html_parts = [NEJM_CSS, '<table class="nejm-table">']
+
+    if caption:
+        html_parts.append(f'<caption style="text-align: left; font-weight: 600; margin-bottom: 8px;">{caption}</caption>')
+
+    # Header
+    html_parts.append('<thead><tr>')
+    for col in df.columns:
+        # Detect numeric columns for alignment
+        is_numeric = df[col].dtype in ['float64', 'int64', 'float32', 'int32']
+        align_class = 'numeric' if is_numeric else ''
+        html_parts.append(f'<th class="{align_class}">{col}</th>')
+    html_parts.append('</tr></thead>')
+
+    # Body
+    html_parts.append('<tbody>')
+    for _, row in df.iterrows():
+        html_parts.append('<tr>')
+        for i, (col, val) in enumerate(row.items()):
+            is_numeric = isinstance(val, (int, float))
+            if is_numeric and not pd.isna(val):
+                cell_class = 'numeric'
+                formatted_val = f'{val:.4f}' if isinstance(val, float) else str(val)
+            else:
+                cell_class = 'model-name' if i == 0 else ''
+                formatted_val = str(val)
+            html_parts.append(f'<td class="{cell_class}">{formatted_val}</td>')
+        html_parts.append('</tr>')
+    html_parts.append('</tbody></table>')
+
+    return '\n'.join(html_parts)
+
+
+def create_forecast_table(forecasts_df: pd.DataFrame) -> str:
+    """Create NEJM-styled table of forecast values."""
+    # Prepare display dataframe
+    display_df = forecasts_df.copy()
+    display_df['Date'] = pd.to_datetime(display_df['ds']).dt.strftime('%Y-%m')
+
+    # Select key columns
+    model_cols = ['AutoARIMA', 'AutoETS', 'LightGBM', 'XGBoost']
+    available_cols = ['Date'] + [c for c in model_cols if c in display_df.columns]
+    display_df = display_df[available_cols]
+
+    return format_nejm_table(display_df, caption="Forecasted Values by Model")

@@ -68,3 +68,20 @@ def test_create_tufte_forecast_plot_returns_figure():
 
     assert isinstance(fig, plt.Figure)
     plt.close(fig)
+
+
+def test_format_nejm_table_returns_styled_html():
+    """Test that NEJM formatter returns HTML string."""
+    from app import format_nejm_table
+    import pandas as pd
+
+    df = pd.DataFrame({
+        'Model': ['A', 'B'],
+        'MAE': [0.1, 0.2],
+        'RMSE': [0.15, 0.25]
+    })
+
+    html = format_nejm_table(df)
+
+    assert isinstance(html, str)
+    assert '<table' in html or '<style' in html
