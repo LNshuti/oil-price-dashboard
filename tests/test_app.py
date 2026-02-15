@@ -26,3 +26,29 @@ def test_load_oil_data_has_datetime_index():
         assert pd.api.types.is_datetime64_any_dtype(df.index)
     else:
         assert pd.api.types.is_datetime64_any_dtype(df['date'])
+
+
+def test_run_forecasts_returns_results():
+    """Test that forecasting returns predictions for all models."""
+    from app import load_oil_data, run_forecasts
+
+    df = load_oil_data()
+    results = run_forecasts(df, horizon=4)
+
+    assert isinstance(results, dict)
+    assert 'forecasts' in results
+    assert 'metrics' in results
+    assert len(results['forecasts']) > 0
+
+
+def test_run_forecasts_includes_confidence_intervals():
+    """Test that forecasts include confidence intervals."""
+    from app import load_oil_data, run_forecasts
+
+    df = load_oil_data()
+    results = run_forecasts(df, horizon=4)
+
+    forecasts_df = results['forecasts']
+    # Check for lo/hi columns (confidence intervals)
+    ci_cols = [c for c in forecasts_df.columns if 'lo' in c.lower() or 'hi' in c.lower()]
+    assert len(ci_cols) > 0, "No confidence interval columns found"
