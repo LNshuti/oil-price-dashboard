@@ -39,18 +39,11 @@ def load_oil_data(force_refresh: bool = False) -> pd.DataFrame:
     Returns:
         DataFrame with datetime index and price values.
     """
-    # Check for existing processed data first
-    monthly_file = DATA_DIR / "louisiana_tot_gasoline_wholesale_monthly.csv"
+    # Check for Gulf Coast monthly data (updated 2025-2026 series)
+    gulf_coast_file = DATA_DIR / "gulf_coast_gasoline_monthly.csv"
 
-    if monthly_file.exists() and not force_refresh:
-        df = pd.read_csv(monthly_file)
-        # Extract date from the 'data' column which contains ['YYYYMM', value] format
-        # The 'date' column in the file is inconsistent, so we parse from 'data'
-        if 'data' in df.columns:
-            # Extract YYYYMM from data column like "['202203', 3.09]"
-            df['date'] = df['data'].str.extract(r"'(\d{6})'")[0]
-        # Drop rows where date couldn't be extracted
-        df = df.dropna(subset=['date'])
+    if gulf_coast_file.exists() and not force_refresh:
+        df = pd.read_csv(gulf_coast_file)
         df['date'] = pd.to_datetime(df['date'].astype(str) + '01', format='%Y%m%d')
         df = df.set_index('date')
         df = df.sort_index()
@@ -64,7 +57,7 @@ def load_oil_data(force_refresh: bool = False) -> pd.DataFrame:
             df = pd.read_csv(CACHE_FILE, index_col=0, parse_dates=True)
             return df
 
-    # Fetch fresh data
+    # Fetch fresh data from EIA API
     df = fetch_eia_data()
 
     # Cache the data
@@ -75,36 +68,44 @@ def load_oil_data(force_refresh: bool = False) -> pd.DataFrame:
 
 
 def fetch_eia_data() -> pd.DataFrame:
-    """Fetch latest oil price data from EIA."""
+    """Fetch latest oil price data from EIA API (Gulf Coast retail gasoline)."""
     try:
-        response = requests.get(EIA_URL, timeout=30)
+        # Use EIA API v2 for Gulf Coast retail gasoline prices
+        url = 'https://api.eia.gov/v2/petroleum/pri/gnd/data/'
+        params = {
+            'api_key': 'DEMO_KEY',
+            'frequency': 'weekly',
+            'data[0]': 'value',
+            'facets[duoarea][]': 'R30',  # Gulf Coast PADD 3
+            'facets[product][]': 'EPM0',  # Total Gasoline
+            'sort[0][column]': 'period',
+            'sort[0][direction]': 'asc',
+            'length': 5000
+        }
+
+        response = requests.get(url, params=params, timeout=30)
         response.raise_for_status()
+        data = response.json()
+        records = data['response']['data']
 
-        df = pd.read_excel(
-            BytesIO(response.content),
-            sheet_name="Data 12",
-            skiprows=2
-        )
+        # Create dataframe from API response
+        df = pd.DataFrame(records)
+        df['date'] = pd.to_datetime(df['period'])
+        df['price'] = pd.to_numeric(df['value'])
+        df = df[['date', 'price']].sort_values('date')
 
-        # Clean and process
-        df = df.iloc[:, :2]  # First two columns: date and price
-        df.columns = ['date', 'price']
-        df['date'] = pd.to_datetime(df['date'])
-        df = df.dropna()
-        df = df.set_index('date')
-        df = df.sort_index()
+        # Convert to monthly averages
+        df['month'] = df['date'].dt.to_period('M')
+        monthly = df.groupby('month')['price'].mean().reset_index()
+        monthly['date'] = monthly['month'].dt.to_timestamp()
+        monthly = monthly.set_index('date')[['price']]
 
-        return df
+        return monthly
     except Exception as e:
-        # Fall back to local data if fetch fails
-        monthly_file = DATA_DIR / "louisiana_tot_gasoline_wholesale_monthly.csv"
-        if monthly_file.exists():
-            df = pd.read_csv(monthly_file)
-            # Extract date from the 'data' column
-            if 'data' in df.columns:
-                df['date'] = df['data'].str.extract(r"'(\d{6})'")[0]
-            # Drop rows where date couldn't be extracted
-            df = df.dropna(subset=['date'])
+        # Fall back to local Gulf Coast data if fetch fails
+        gulf_coast_file = DATA_DIR / "gulf_coast_gasoline_monthly.csv"
+        if gulf_coast_file.exists():
+            df = pd.read_csv(gulf_coast_file)
             df['date'] = pd.to_datetime(df['date'].astype(str) + '01', format='%Y%m%d')
             df = df.set_index('date')
             df = df.sort_index()
@@ -624,7 +625,7 @@ def create_app() -> gr.Blocks:
 
                 ## Data Source
 
-                U.S. Energy Information Administration (EIA) - Weekly Petroleum Status Report
+                U.S. Energy Information Administration (EIA) - Gulf Coast Retail Gasoline Prices (1993-2026)
 
                 ## Confidence Intervals
 

@@ -10,11 +10,11 @@ import matplotlib.pyplot as plt
 
 app = FastAPI()
 
-# Load the dataset
-file_path = 'data/processed/louisiana_tot_gasoline_wholesale_monthly.csv'
+# Load the dataset (Gulf Coast retail gasoline prices - includes Louisiana/PADD 3)
+file_path = '../data/processed/gulf_coast_gasoline_monthly.csv'
 data = pd.read_csv(file_path)
-# Convert the 'date' column to datetime format and fix the date parsing issue
-data['date'] = pd.to_datetime(data['date'] + '01', format='%Y%m%d')
+# Convert the 'date' column to datetime format
+data['date'] = pd.to_datetime(data['date'].astype(str) + '01', format='%Y%m%d')
 
 # Set the date column as index
 data.set_index('date', inplace=True)
@@ -22,8 +22,8 @@ data = data[['value']]  # Keep only the necessary 'value' column
 
 # Plot the time series
 plt.figure(figsize=(12, 6))
-plt.plot(data.index, data['value'], label='Gasoline Wholesale Price')
-plt.title('Louisiana Total Gasoline Wholesale Monthly Prices')
+plt.plot(data.index, data['value'], label='Gasoline Retail Price')
+plt.title('Gulf Coast Gasoline Retail Monthly Prices (1993-2026)')
 plt.xlabel('Date')
 plt.ylabel('Price')
 plt.legend()
