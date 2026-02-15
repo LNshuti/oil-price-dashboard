@@ -1,3 +1,6 @@
+import matplotlib
+matplotlib.use('Agg')  # Non-interactive backend for testing
+
 import pytest
 from unittest.mock import patch, MagicMock
 import pandas as pd
@@ -52,3 +55,16 @@ def test_run_forecasts_includes_confidence_intervals():
     # Check for lo/hi columns (confidence intervals)
     ci_cols = [c for c in forecasts_df.columns if 'lo' in c.lower() or 'hi' in c.lower()]
     assert len(ci_cols) > 0, "No confidence interval columns found"
+
+
+def test_create_tufte_forecast_plot_returns_figure():
+    """Test that Tufte plot function returns a matplotlib figure."""
+    from app import load_oil_data, run_forecasts, create_tufte_forecast_plot
+    import matplotlib.pyplot as plt
+
+    df = load_oil_data()
+    results = run_forecasts(df, horizon=4)
+    fig = create_tufte_forecast_plot(df, results['forecasts'])
+
+    assert isinstance(fig, plt.Figure)
+    plt.close(fig)

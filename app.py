@@ -9,6 +9,8 @@ from pathlib import Path
 from datetime import datetime, timedelta
 import requests
 from io import BytesIO
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 
 from statsforecast import StatsForecast
 from statsforecast.models import AutoARIMA, AutoETS
@@ -215,3 +217,172 @@ def run_forecasts(df: pd.DataFrame, horizon: int = 12) -> dict:
         'train_df': train_df,
         'test_df': test_df,
     }
+
+
+def setup_tufte_style():
+    """Configure matplotlib for Tufte-inspired minimalist style."""
+    plt.rcParams.update({
+        # Remove chartjunk
+        'axes.spines.top': False,
+        'axes.spines.right': False,
+        'axes.spines.left': True,
+        'axes.spines.bottom': True,
+
+        # Minimal grid
+        'axes.grid': False,
+
+        # Muted colors
+        'axes.prop_cycle': plt.cycler(color=[
+            '#4a4a4a',  # Dark gray
+            '#e63946',  # Accent red
+            '#457b9d',  # Steel blue
+            '#2a9d8f',  # Teal
+        ]),
+
+        # Typography
+        'font.family': 'sans-serif',
+        'font.size': 10,
+        'axes.titlesize': 12,
+        'axes.labelsize': 10,
+
+        # Clean ticks
+        'xtick.direction': 'out',
+        'ytick.direction': 'out',
+        'xtick.major.size': 4,
+        'ytick.major.size': 4,
+
+        # Figure
+        'figure.facecolor': 'white',
+        'axes.facecolor': 'white',
+        'figure.dpi': 100,
+    })
+
+
+def create_tufte_forecast_plot(
+    historical_df: pd.DataFrame,
+    forecasts_df: pd.DataFrame,
+    title: str = "Oil Price Forecast"
+) -> plt.Figure:
+    """
+    Create a Tufte-styled forecast plot with confidence intervals.
+
+    Args:
+        historical_df: Historical price data.
+        forecasts_df: Forecast results from run_forecasts.
+        title: Plot title.
+
+    Returns:
+        Matplotlib Figure object.
+    """
+    setup_tufte_style()
+
+    fig, ax = plt.subplots(figsize=(12, 6))
+
+    # Historical data
+    hist_dates = historical_df.index
+    hist_values = historical_df['price'] if 'price' in historical_df.columns else historical_df.iloc[:, 0]
+
+    ax.plot(hist_dates, hist_values, color='#4a4a4a', linewidth=1.5, label='Historical')
+
+    # Forecast data
+    forecast_dates = pd.to_datetime(forecasts_df['ds'])
+
+    # Plot each model's forecast
+    model_colors = {
+        'AutoARIMA': '#e63946',
+        'AutoETS': '#457b9d',
+        'LightGBM': '#2a9d8f',
+        'XGBoost': '#f4a261',
+    }
+
+    for model_name, color in model_colors.items():
+        if model_name in forecasts_df.columns:
+            ax.plot(
+                forecast_dates,
+                forecasts_df[model_name],
+                color=color,
+                linewidth=1.5,
+                linestyle='--',
+                label=model_name
+            )
+
+            # Confidence intervals (if available)
+            lo_col = f'{model_name}-lo-80'
+            hi_col = f'{model_name}-hi-80'
+            if lo_col in forecasts_df.columns and hi_col in forecasts_df.columns:
+                ax.fill_between(
+                    forecast_dates,
+                    forecasts_df[lo_col],
+                    forecasts_df[hi_col],
+                    color=color,
+                    alpha=0.15,
+                )
+
+    # Minimal decoration
+    ax.set_title(title, fontweight='normal', loc='left', pad=10)
+    ax.set_xlabel('')
+    ax.set_ylabel('Price ($/gallon)', fontsize=10)
+
+    # Date formatting
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y'))
+    ax.xaxis.set_major_locator(mdates.YearLocator(2))
+
+    # Legend - direct labeling style (outside plot, minimal)
+    ax.legend(
+        loc='upper left',
+        frameon=False,
+        fontsize=9,
+    )
+
+    # Thin axis lines
+    for spine in ['left', 'bottom']:
+        ax.spines[spine].set_linewidth(0.5)
+        ax.spines[spine].set_color('#888888')
+
+    plt.tight_layout()
+
+    return fig
+
+
+def create_model_comparison_plot(metrics_df: pd.DataFrame) -> plt.Figure:
+    """Create a Tufte-styled bar chart comparing model metrics."""
+    setup_tufte_style()
+
+    fig, axes = plt.subplots(1, 3, figsize=(12, 4))
+
+    metrics = ['MAE', 'RMSE', 'MAPE']
+    colors = ['#457b9d', '#e63946', '#2a9d8f']
+
+    for ax, metric, color in zip(axes, metrics, colors):
+        bars = ax.bar(
+            metrics_df['Model'],
+            metrics_df[metric],
+            color=color,
+            width=0.6,
+            edgecolor='none'
+        )
+
+        # Direct labels on bars
+        for bar, val in zip(bars, metrics_df[metric]):
+            ax.text(
+                bar.get_x() + bar.get_width()/2,
+                bar.get_height() + 0.02 * max(metrics_df[metric]),
+                f'{val:.2f}',
+                ha='center',
+                va='bottom',
+                fontsize=9
+            )
+
+        ax.set_title(metric, fontweight='normal', loc='left')
+        ax.set_ylabel('')
+        ax.set_xlabel('')
+
+        # Remove top spine
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+
+        # Rotate labels
+        plt.setp(ax.get_xticklabels(), rotation=45, ha='right')
+
+    plt.tight_layout()
+    return fig
