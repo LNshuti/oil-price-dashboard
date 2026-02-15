@@ -7,5 +7,10 @@ statsmodels
 scikit-learn
 fastapi
 uvicorn
-plotly  
+plotly
 xgboost
+gradio>=4.0.0
+statsforecast
+mlforecast
+lightgbm
+requests

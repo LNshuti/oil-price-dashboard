@@ -1,16 +1,23 @@
 [![CI](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/LNshuti/oil-price-dashboard)
 
 # Oil Price Dashboard Project
 
+## Live Demo
+
+Try the interactive dashboard: [HuggingFace Spaces](https://huggingface.co/spaces/LNshuti/oil-price-dashboard)
+
 ## Overview
 
-The Oil Price Dashboard Project is designed to understand the US oil markets by forecasting prices and production quantities. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices. The core of the analysis is performed in a Jupyter Notebook, `explore_oil_markets.ipynb`, which includes data loading, cleaning, transformation, forecasting and visualization.
+The Oil Price Dashboard Project is designed to understand the US oil markets by forecasting prices and production quantities. This project uses data from the U.S. Energy Information Administration, focusing on the wholesale gasoline prices.
 
 ## Features
 
-- **Data Analysis**: Jupyter [Notebook]("https://github.com/LNshuti/oil-price-dashboard/blob/main/'explore_oil_markets.ipynb'") contains detailed steps for data cleaning, transformation, and preliminary analysis. 
-
-- **Interactive Dashboard**: Integrates the analysis and visualizations into an interactive dashboard using FastAPI.
+- **Interactive Gradio Dashboard**: Enterprise-grade forecasting dashboard with state-of-the-art ML models
+- **ML Models**: AutoARIMA, AutoETS (StatsForecast), LightGBM, XGBoost (MLForecast)
+- **Tufte-styled Visualizations**: Minimalist charts following Edward Tufte's principles
+- **NEJM-formatted Tables**: Professional academic-style data tables
+- **Data Analysis**: Jupyter Notebook for exploratory analysis
 
 ## Setup
 
@@ -35,11 +42,17 @@ jupyter notebook
 ```
 Navigate to the explore_oil_markets.ipynb notebook and run the cells to perform the analysis and view the visualizations.
 
-### Run the interactive Dashboard
+### Run the Gradio Dashboard
+```bash
+python app.py
+```
+Navigate to [http://127.0.0.1:7860/](http://127.0.0.1:7860/) to interact with the app
+
+### Run the legacy FastAPI Dashboard
 ```bash
 uvicorn main:app --reload
 ```
-#### Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to interact with the app
+Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to interact with the legacy app
 
 # References 
 1. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
