@@ -581,8 +581,8 @@ def create_app() -> gr.Blocks:
         # Controls
         with gr.Row():
             horizon_dropdown = gr.Dropdown(
-                choices=[4, 8, 12, 26, 52],
-                value=12,
+                choices=["4", "8", "12", "26", "52"],
+                value="12",
                 label="Forecast Horizon (periods)",
             )
             refresh_checkbox = gr.Checkbox(
