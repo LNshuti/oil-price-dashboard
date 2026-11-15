@@ -42,11 +42,13 @@ python manage.py runserver
 
 ### Testing
 ```bash
-pytest tests/test_app.py                  # dashboard tests (~15s)
+pytest --cov=dashboard --cov=app tests    # all tests (~15s), as CI runs them
+pytest tests/test_app.py                  # dashboard tests only
 pytest -k "test_name"                     # run specific test by name
 ```
-`tests/visualization/test_plots.py` and `tests/data/test_download_oil_prices.py`
-are pre-existing broken tests (missing modules / placeholder imports).
+CI (`.github/workflows/ci.yml`) runs flake8 and pytest on Python 3.10
+(HuggingFace Spaces default) and 3.12. Gradio is pinned `>=6.31,<7` in
+requirements.txt and `sdk_version` in README.md; keep them in sync.
 
 ### Linting
 ```bash

@@ -9,7 +9,7 @@ def get_plot_best_fit_line(slope, intercept, x_array, y_array, title):
     y_array: array of y-axis data points
     title: title of the plot
 
-    returns: None
+    returns: the matplotlib Figure
     """
     # Convert x_array and y_array to numpy arrays
     x_array = np.array(x_array)
@@ -30,5 +30,4 @@ def get_plot_best_fit_line(slope, intercept, x_array, y_array, title):
     plt.title(title)
     plt.legend()
 
-    # Display the plot
-    plt.show()
+    return plt.gcf()
