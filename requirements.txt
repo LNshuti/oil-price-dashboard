@@ -9,8 +9,10 @@ fastapi
 uvicorn
 plotly
 xgboost
-gradio>=4.0.0
+gradio>=6.0.0
 statsforecast
 mlforecast
 lightgbm
 requests
+xlrd
+openpyxl
