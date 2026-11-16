@@ -10,9 +10,8 @@ Fleet fuel price outlook for **fleet managers** (the target user):
   diesel and regular gasoline prices for every market EIA measures, ZIP
   lookup to the nearest measured market, monthly forecasts and a fuel
   budget. Deployed to HuggingFace Spaces (`app_file: app.py`).
-- **Legacy, unrelated to the dashboard**: `scr/main.py` (old FastAPI
-  dashboard) and `backend/server/` (Django ML API scaffold whose only
-  model is an income classifier).
+- **Legacy, unrelated to the dashboard**: `backend/server/` (Django ML
+  API scaffold whose only model is an income classifier).
 
 Data source: EIA weekly retail spreadsheets (`psw18vwall.xls` diesel
 "Data 1", `pswrgvwall.xls` regular gasoline "Data 3"); no API key needed.

@@ -5,8 +5,6 @@ pandas
 seaborn
 statsmodels
 scikit-learn
-fastapi
-uvicorn
 plotly
 xgboost
 gradio>=6.31.0,<7

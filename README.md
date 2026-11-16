@@ -79,11 +79,5 @@ Navigate to [http://127.0.0.1:7860/](http://127.0.0.1:7860/) to interact with th
   county and coordinates from [GeoNames](https://www.geonames.org/),
   licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 
-### Run the legacy FastAPI Dashboard
-```bash
-uvicorn main:app --reload
-```
-Navigate to [http://127.0.0.1:8000/](http://127.0.0.1:8000/) to interact with the legacy app
-
 # References 
 1. Sean Taylor. Lineapy Notebook. https://github.com/seanjtaylor/gas-price-forecast.git
