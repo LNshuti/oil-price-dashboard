@@ -11,13 +11,13 @@ license: mit
 ---
 
 [![CI](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml/badge.svg)](https://github.com/LNshuti/oil-price-dashboard/actions/workflows/ci.yml)
-[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/LNshuti/oil-price-dashboard)
+[![Hugging Face Spaces](https://img.shields.io/badge/%F0%9F%A4%97%20Hugging%20Face-Spaces-blue)](https://huggingface.co/spaces/LeonceNsh/oil-price-dashboard)
 
 # Fleet Fuel Price Outlook
 
 ## Live Demo
 
-Try the interactive dashboard: [HuggingFace Spaces](https://huggingface.co/spaces/LNshuti/oil-price-dashboard)
+Try the interactive dashboard: [HuggingFace Spaces](https://huggingface.co/spaces/LeonceNsh/oil-price-dashboard)
 
 ## Overview
 
