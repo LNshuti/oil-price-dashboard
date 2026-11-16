@@ -5,12 +5,12 @@ pandas
 seaborn
 statsmodels
 scikit-learn
-fastapi
-uvicorn
 plotly
 xgboost
-gradio>=4.0.0
+gradio>=6.31.0,<7
 statsforecast
 mlforecast
 lightgbm
 requests
+xlrd
+openpyxl

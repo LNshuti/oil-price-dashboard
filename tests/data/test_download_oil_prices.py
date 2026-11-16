@@ -1,45 +1,43 @@
-import unittest
+from io import BytesIO
 from unittest.mock import MagicMock, patch
+
 import pandas as pd
-import io
-import re
-import requests
 
-#import your_module  # Replace with the actual name of the module containing the above code
+from scr.data.download_oil_prices import download_and_tidy_oil_prices
 
-
-class TestGasPriceData(unittest.TestCase):
-    @patch("requests.get")
-    @patch("lineapy.save")
-    def test_gas_price_data_retrieval(self, mock_lineapy_save, mock_requests_get):
-        # Prepare a mock response from the EIA website
-        mock_excel_data = b"Sample binary data of Excel file"
-        mock_response = MagicMock(spec=requests.Response)
-        mock_response.content = mock_excel_data
-        mock_requests_get.return_value = mock_response
-
-        # Mock the expected DataFrame transformation result
-        mock_df = pd.DataFrame({"Date": [], "Price": []})
-
-        # Mock pd.read_excel
-        with patch("pd.read_excel", return_value=mock_df) as mock_read_excel:
-            your_module.function_containing_the_code()  # Replace with the actual name of the function containing the given code
-
-            # Check if the requests.get was called with the correct URL
-            mock_requests_get.assert_called_once_with("https://www.eia.gov/petroleum/gasdiesel/xls/pswrgvwall.xls")
-
-            # Check if pd.read_excel was called with the correct arguments
-            mock_read_excel.assert_called_once_with(
-                mock_excel_data,
-                sheet_name="Data 12",
-                index_col=0,
-                skiprows=2,
-                parse_dates=["Date"],
-            )
-
-            # Check if lineapy.save was called with the correct arguments
-            mock_lineapy_save.assert_called_once_with(mock_df, "weekly_gas_price_data")
+URL = "https://www.eia.gov/petroleum/gasdiesel/xls/pswrgvwall.xls"
+SUFFIX = (" All Grades All Formulations Retail Gasoline Prices"
+          "  (Dollars per Gallon)")
 
 
-if __name__ == "__main__":
-    unittest.main()
+def _eia_workbook() -> bytes:
+    """A minimal workbook shaped like EIA's 'Data 12' sheet."""
+    rows = [
+        ["Back to Contents", "Data 12", None],
+        ["Sourcekey", "EMM_EPM0_PTE_NUS_DPG", "EMM_EPM0_PTE_R1X_DPG"],
+        ["Date", f"Weekly U.S.{SUFFIX}",
+         f"Weekly New England (PADD 1A){SUFFIX}"],
+        [pd.Timestamp("2026-11-02"), 4.15, 4.14],
+        [pd.Timestamp("2026-11-09"), 4.00, 4.06],
+    ]
+    buffer = BytesIO()
+    pd.DataFrame(rows).to_excel(buffer, sheet_name="Data 12", header=False,
+                                index=False)
+    return buffer.getvalue()
+
+
+def test_download_and_tidy_oil_prices(tmp_path, monkeypatch):
+    monkeypatch.chdir(tmp_path)
+    (tmp_path / "data" / "processed").mkdir(parents=True)
+    response = MagicMock(content=_eia_workbook())
+
+    with patch("scr.data.download_oil_prices.requests.get",
+               return_value=response) as get:
+        df = download_and_tidy_oil_prices(URL)
+
+    get.assert_called_once_with(URL)
+    assert list(df.columns) == ["Date", "U.S.", "New England"]
+    assert pd.api.types.is_datetime64_any_dtype(df["Date"])
+    assert df["U.S."].tolist() == [4.15, 4.00]
+    saved = tmp_path / "data" / "processed" / "weekly_gas_price_data.csv"
+    assert saved.exists()
